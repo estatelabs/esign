@@ -1,5 +1,9 @@
 # eSign
 
+[![Go Report Card](https://goreportcard.com/badge/github.com/estatelabs/esign)](https://goreportcard.com/report/github.com/estatelabs/esign)
+[![GitHub license](https://img.shields.io/github/license/estatelabs/esign?style=flat-square)](https://github.com/estatelabs/esign/blob/master/LICENSE)
+![GitHub last commit](https://img.shields.io/github/last-commit/estatelabs/esign?style=flat-square)
+
 **eSign** is a powerful library with fluent human readable syntax for the verification of files according to the **SHA3-256 Bit** checksum and the digital signature **ed25519** written in GO. 
 
 ## Features
