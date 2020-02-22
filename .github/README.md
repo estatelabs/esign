@@ -1,4 +1,4 @@
-![eSign](https://github.com/estatelabs/esign/blob/master/.github/eSign.png "eSign")
+<p><img src="https://github.com/estatelabs/esign/raw/master/.github/eSign.png" width="256px" alt="esign" /></p>
 
 [![Go Report Card](https://goreportcard.com/badge/github.com/estatelabs/esign)](https://goreportcard.com/report/github.com/estatelabs/esign)
 [![GitHub license](https://img.shields.io/github/license/estatelabs/esign?style=flat-square)](https://github.com/estatelabs/esign/blob/master/LICENSE)
