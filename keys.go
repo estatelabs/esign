@@ -23,6 +23,7 @@ func CreateKeyPair() *Keystore {
 	return keystore
 }
 
+// Saves public and private key to desired destination
 func (keystore *Keystore) Save(destLocation string) {
 	if len(destLocation) > 0 && !fileExists(destLocation) {
 		err := ioutil.WriteFile(destLocation+".pub", keystore.publicKey[:], 0644)
