@@ -1,6 +1,9 @@
 package tests
 
-import "os"
+import (
+	"io/ioutil"
+	"os"
+)
 
 func fileExists(filename string) bool {
 	info, err := os.Stat(filename)
@@ -8,4 +11,13 @@ func fileExists(filename string) bool {
 		return false
 	}
 	return !info.IsDir()
+}
+
+func createTempDir() string {
+	dir, err := ioutil.TempDir("", "esign")
+	if err != nil {
+		panic(err)
+	}
+
+	return dir
 }
