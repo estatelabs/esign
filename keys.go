@@ -9,8 +9,8 @@ import (
 )
 
 type Keystore struct {
-	publicKey  *[32]byte
-	privateKey *[64]byte
+	PublicKey  *[32]byte
+	PrivateKey *[64]byte
 }
 
 // Create Ed25519 key pair
@@ -18,7 +18,7 @@ func CreateKeyPair() *Keystore {
 	var rand io.Reader
 	publicKey, privateKey, _ := sign.GenerateKey(rand)
 
-	keystore := &Keystore{publicKey: publicKey, privateKey: privateKey}
+	keystore := &Keystore{PublicKey: publicKey, PrivateKey: privateKey}
 
 	return keystore
 }
@@ -26,18 +26,24 @@ func CreateKeyPair() *Keystore {
 // Saves public and private key to desired destination
 func (keystore *Keystore) Save(destLocation string) {
 	if len(destLocation) > 0 && !fileExists(destLocation) {
-		err := ioutil.WriteFile(destLocation+".pub", keystore.publicKey[:], 0644)
+		err := ioutil.WriteFile(destLocation+".pub", keystore.PublicKey[:], 0644)
 		if err != nil {
 			panic(err)
 		}
 
-		err = ioutil.WriteFile(destLocation+".prv", keystore.privateKey[:], 0644)
+		err = ioutil.WriteFile(destLocation+".prv", keystore.PrivateKey[:], 0644)
 		if err != nil {
 			panic(err)
 		}
 	} else {
 		panic("File could not be saved! Caused by: " + destLocation)
 	}
+}
+
+// Returns public and private key in a base64 format
+func (keystore *Keystore) ToBase64() (string, string) {
+	return base64.StdEncoding.EncodeToString(keystore.PublicKey[:]),
+		base64.StdEncoding.EncodeToString(keystore.PrivateKey[:])
 }
 
 // Load private key from generic file and provide a pointer to it
@@ -52,11 +58,17 @@ func LoadPrivateKey(location string) (*[64]byte, error) {
 }
 
 // Load and decode private key from base64 string and provide a pointer to it
-func LoadPrivateKeyFromBase64(encodedKey string) *[64]byte {
+func LoadPrivateKeyFromBase64(encodedKey string) (*[64]byte, error) {
 	var privateKey [64]byte
-	copy(privateKey[:], convertBase64ToBytes(encodedKey))
 
-	return &privateKey
+	privateKeyBase64, err := convertBase64ToBytes(encodedKey)
+	if err != nil {
+		return nil, err
+	}
+
+	copy(privateKey[:], privateKeyBase64)
+
+	return &privateKey, nil
 }
 
 // Load public key from generic file and provide a pointer to it
@@ -71,23 +83,28 @@ func LoadPublicKey(location string) (*[32]byte, error) {
 }
 
 // Load and decode public key from base64 string and provide a pointer to it
-func LoadPublicKeyFromBase64(encodedKey string) *[32]byte {
+func LoadPublicKeyFromBase64(encodedKey string) (*[32]byte, error) {
 	var publicKey [32]byte
-	copy(publicKey[:], convertBase64ToBytes(encodedKey))
 
-	return &publicKey
+	publicKeyBase64, err := convertBase64ToBytes(encodedKey)
+	if err != nil {
+		return nil, err
+	}
+	copy(publicKey[:], publicKeyBase64)
+
+	return &publicKey, nil
 }
 
 // Load and decode private key from base64 string and provide a pointer to it
-func convertBase64ToBytes(encodedKey string) []byte {
+func convertBase64ToBytes(encodedKey string) ([]byte, error) {
 	var bytes []byte
 
 	bytes, err := base64.StdEncoding.DecodeString(encodedKey)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 
-	return bytes
+	return bytes, nil
 }
 
 // Internally load a specific file if it exists and is not a directory
